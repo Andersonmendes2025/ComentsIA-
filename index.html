@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartReviews - Gerenciador de Avaliações Google com IA</title>
+    <meta name="description" content="Aplicativo web gratuito para gerenciar avaliações do Google My Business com inteligência artificial. Automatize respostas e melhore sua reputação online.">
+    <meta name="keywords" content="google reviews, avaliações google, ia, inteligência artificial, google my business, gestão reputação">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="SmartReviews - Gerenciador de Avaliações Google com IA">
+    <meta property="og:description" content="Automatize respostas às avaliações do seu negócio com inteligência artificial">
+    <meta property="og:image" content="images/hero_banner.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="SmartReviews - Gerenciador de Avaliações Google com IA">
+    <meta property="twitter:description" content="Automatize respostas às avaliações do seu negócio com inteligência artificial">
+    <meta property="twitter:image" content="images/hero_banner.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/smartreviews_logo.png">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #ffffff;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #2563eb;
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2563eb 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #2563eb;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-visual img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Sections */
+        .section {
+            padding: 80px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #2563eb, #764ba2);
+        }
+
+        .feature-icon img {
+            width: 64px;
+            height: 64px;
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* How it Works */
+        .how-it-works {
+            background: #f9fafb;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2563eb, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Configuration Section */
+        .config-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .config-step {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .config-step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .config-step h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .config-step p {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        /* FAQ Section */
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #f9fafb;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: #6b7280;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 2rem;
+            color: #9ca3af;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .config-tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-button {
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Scroll animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="#home" class="logo">
+                <img src="images/smartreviews_logo.png" alt="SmartReviews Logo">
+                SmartReviews
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Início</a></li>
+                <li><a href="#features" class="nav-link">Funcionalidades</a></li>
+                <li><a href="#how-it-works" class="nav-link">Como Funciona</a></li>
+                <li><a href="#setup" class="nav-link">Configuração</a></li>
+                <li><a href="#faq" class="nav-link">FAQ</a></li>
+                <li><a href="#about" class="nav-link">Sobre</a></li>
+            </ul>
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content fade-in-up">
+                <h1>
+                    Gerencie suas Avaliações do Google
+                    <span class="highlight">com Inteligência Artificial</span>
+                </h1>
+                <p>
+                    Aplicativo web que conecta à API do Google My Business para visualizar e responder às avaliações do seu negócio, 
+                    com sugestões automáticas de respostas geradas por IA.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#setup" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i>
+                        Começar Agora
+                    </a>
+                    <a href="#features" class="btn btn-secondary">
+                        <i class="fas fa-play"></i>
+                        Ver Funcionalidades
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual fade-in-up">
+                <img src="images/hero_illustration.png" alt="SmartReviews Dashboard" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <div class="container">
+            <div class="section-header scroll-animate">
+                <h2 class="section-title">Funcionalidades Principais</h2>
+                <p class="section-subtitle">
+                    Tudo que você precisa para gerenciar suas avaliações de forma eficiente
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">
+                        <img src="images/feature_auth_icon.png" alt="Autenticação Segura">
+                    </div>
+                    <h3 class="feature-title">Autenticação Segura</h3>
+                    <p class="feature-description">
+                        Conecte-se com segurança à sua conta Google usando OAuth 2.0. 
+                        Suas credenciais são protegidas e nunca armazenadas.
+                    </p>
+                </div>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3 class="feature-title">Listagem Completa</h3>
+                    <p class="feature-description">
+                        Visualize todas as avaliações dos seus negócios com filtros por data, 
+                        classificação e status de resposta.
+                    </p>
+                </div>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">
+                        <i class="fas fa-reply"></i>
+                    </div>
+                    <h3 class="feature-title">Resposta Rápida</h3>
+                    <p class="feature-description">
+                        Interface intuitiva para redigir e enviar respostas diretamente 
+                        para a API do Google My Business.
+                    </p>
+                </div>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">
+                        <img src="images/feature_ai_icon.png" alt="IA Integrada">
+                    </div>
+                    <h3 class="feature-title">IA Integrada</h3>
+                    <p class="feature-description">
+                        Sugestões automáticas de respostas geradas pelo Google Gemini, 
+                        personalizadas para cada avaliação.
+                    </p>
+                </div>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Design Responsivo</h3>
+                    <p class="feature-description">
+                        Interface adaptável que funciona perfeitamente em desktop, 
+                        tablet e dispositivos móveis.
+                    </p>
+                </div>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Gerenciamento Eficiente</h3>
+                    <p class="feature-description">
+                        Organize e gerencie múltiplos perfis de empresa em uma única 
+                        interface centralizada.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section id="how-it-works" class="section how-it-works">
+        <div class="container">
+            <div class="section-header scroll-animate">
+                <h2 class="section-title">Como Funciona</h2>
+                <p class="section-subtitle">
+                    Três passos simples para começar a gerenciar suas avaliações
+                </p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card scroll-animate">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Configure as APIs</h3>
+                    <p class="step-description">
+                        Configure o Google Cloud Console e obtenha suas credenciais OAuth 2.0 e chave da API Gemini.
+                    </p>
+                </div>
+                <div class="step-card scroll-animate">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Execute o Aplicativo</h3>
+                    <p class="step-description">
+                        Instale as dependências, configure o ambiente e execute o aplicativo localmente em seu computador.
+                    </p>
+                </div>
+                <div class="step-card scroll-animate">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Gerencie Avaliações</h3>
+                    <p class="step-description">
+                        Faça login, visualize suas avaliações e use a IA para gerar respostas personalizadas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Setup Section -->
+    <section id="setup" class="section">
+        <div class="container">
+            <div class="section-header scroll-animate">
+                <h2 class="section-title">Guia de Configuração</h2>
+                <p class="section-subtitle">
+                    Siga este guia passo a passo para configurar o aplicativo
+                </p>
+            </div>
+            
+            <div class="config-tabs">
+                <button class="tab-button active" data-tab="requirements">Requisitos</button>
+                <button class="tab-button" data-tab="google-cloud">Google Cloud</button>
+                <button class="tab-button" data-tab="gemini">API Gemini</button>
+                <button class="tab-button" data-tab="installation">Instalação</button>
+            </div>
+
+            <div id="requirements" class="tab-content active">
+                <div class="config-step">
+                    <h4>Requisitos do Sistema</h4>
+                    <p>Antes de começar, certifique-se de ter:</p>
+                    <ul style="margin-left: 2rem; color: #6b7280;">
+                        <li>Python 3.7 ou superior</li>
+                        <li>Conta Google com acesso ao Google My Business</li>
+                        <li>Acesso ao Google Cloud Console</li>
+                        <li>Chave de API do Google Gemini</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="google-cloud" class="tab-content">
+                <div class="config-step">
+                    <h4>1. Criar Projeto</h4>
+                    <p>Acesse o Google Cloud Console e crie um novo projeto</p>
+                </div>
+                <div class="config-step">
+                    <h4>2. Ativar APIs</h4>
+                    <p>Ative as seguintes APIs:</p>
+                    <ul style="margin-left: 2rem; color: #6b7280;">
+                        <li>My Business Business Information API</li>
+                        <li>My Business Account Management API</li>
+                    </ul>
+                </div>
+                <div class="config-step">
+                    <h4>3. Configurar OAuth</h4>
+                    <p>Configure a tela de consentimento OAuth e crie credenciais OAuth 2.0</p>
+                </div>
+                <div class="config-step">
+                    <h4>4. Baixar Credenciais</h4>
+                    <p>Baixe o arquivo JSON e renomeie para client_secrets.json</p>
+                </div>
+            </div>
+
+            <div id="gemini" class="tab-content">
+                <div class="config-step">
+                    <h4>Configuração da API Gemini</h4>
+                    <p>1. Acesse o Google AI Studio</p>
+                    <p>2. Gere uma chave de API</p>
+                    <p>3. Configure como variável de ambiente:</p>
+                    <div class="code-block">
+GEMINI_API_KEY=sua_chave_api_aqui
+                    </div>
+                </div>
+            </div>
+
+            <div id="installation" class="tab-content">
+                <div class="config-step">
+                    <h4>1. Criar Ambiente Virtual</h4>
+                    <div class="code-block">
+python -m venv venv
+.\venv\Scripts\Activate.ps1  # Windows
+source venv/bin/activate     # Linux/macOS
+                    </div>
+                </div>
+                <div class="config-step">
+                    <h4>2. Instalar Dependências</h4>
+                    <div class="code-block">
+pip install flask google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client requests python-dotenv google-generativeai
+                    </div>
+                </div>
+                <div class="config-step">
+                    <h4>3. Executar Aplicativo</h4>
+                    <div class="code-block">
+python src/main.py
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section">
+        <div class="container">
+            <div class="section-header scroll-animate">
+                <h2 class="section-title">Perguntas Frequentes</h2>
+                <p class="section-subtitle">
+                    Soluções para os problemas mais comuns
+                </p>
+            </div>
+            
+            <div class="faq-item scroll-animate">
+                <button class="faq-question">
+                    ModuleNotFoundError: No module named 'flask'
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Este erro indica que o Flask não está instalado ou o ambiente virtual não está ativado. Certifique-se de ativar o ambiente virtual e instalar as dependências:</p>
+                    <div class="code-block">
+.\venv\Scripts\Activate.ps1
+pip install flask
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item scroll-animate">
+                <button class="faq-question">
+                    Arquivo 'client_secrets.json' não encontrado
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Você precisa baixar o arquivo de credenciais OAuth 2.0 do Google Cloud Console e colocá-lo na pasta raiz do projeto com o nome 'client_secrets.json'.</p>
+                </div>
+            </div>
+
+            <div class="faq-item scroll-animate">
+                <button class="faq-question">
+                    Erro de chave secreta do Flask
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Adicione uma chave secreta ao seu aplicativo Flask. No arquivo main.py, adicione:</p>
+                    <div class="code-block">
+app.secret_key = "sua_chave_secreta_aqui"
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item scroll-animate">
+                <button class="faq-question">
+                    Acesso bloqueado pelo Google
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Durante o desenvolvimento, adicione seu e-mail como testador na tela de consentimento OAuth ou use a opção "Avançado" para prosseguir.</p>
+                </div>
+            </div>
+
+            <div class="faq-item scroll-animate">
+                <button class="faq-question">
+                    Template não encontrado
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Certifique-se de que os arquivos HTML estão na pasta 'templates' e configure o Flask para usar o caminho correto:</p>
+                    <div class="code-block">
+template_dir = os.path.abspath('templates')
+app = Flask(__name__, template_folder=template_dir)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header scroll-animate">
+                <h2 class="section-title">Sobre o Projeto</h2>
+            </div>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p style="font-size: 1.1rem; color: #6b7280; line-height: 1.8; margin-bottom: 2rem;">
+                    O Gerenciador de Avaliações Google com IA é um aplicativo web desenvolvido para ajudar empresários e profissionais a gerenciar suas avaliações no Google My Business de forma mais eficiente.
+                </p>
+                <p style="font-size: 1.1rem; color: #6b7280; line-height: 1.8; margin-bottom: 2rem;">
+                    Utilizando a integração com a API do Google My Business e a inteligência artificial do Google Gemini, o aplicativo oferece sugestões automáticas de respostas personalizadas, economizando tempo e mantendo um alto padrão de atendimento ao cliente.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 3rem;">
+                    <div style="text-align: center;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #2563eb; margin-bottom: 0.5rem;">Código Aberto</h3>
+                        <p style="color: #6b7280;">Totalmente gratuito e customizável</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #2563eb; margin-bottom: 0.5rem;">IA Avançada</h3>
+                        <p style="color: #6b7280;">Powered by Google Gemini</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #2563eb; margin-bottom: 0.5rem;">Fácil de Usar</h3>
+                        <p style="color: #6b7280;">Interface intuitiva e moderna</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">SmartReviews</div>
+            <p class="footer-description">
+                Gerencie suas avaliações do Google com inteligência artificial. 
+                Automatize respostas, melhore sua reputação online e economize tempo.
+            </p>
+            <div class="footer-links">
+                <a href="#home" class="footer-link">Início</a>
+                <a href="#features" class="footer-link">Funcionalidades</a>
+                <a href="#setup" class="footer-link">Configuração</a>
+                <a href="#faq" class="footer-link">FAQ</a>
+                <a href="#about" class="footer-link">Sobre</a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SmartReviews. Desenvolvido com ❤️ para a comunidade empresarial brasileira.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navegação suave
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling para links de navegação
+            const navLinks = document.querySelectorAll('a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        const headerHeight = document.querySelector('.header').offsetHeight;
+                        const targetPosition = targetSection.offsetTop - headerHeight;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Header scroll effect
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(255, 255, 255, 0.98)';
+                    header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.background = 'rgba(255, 255, 255, 0.95)';
+                    header.style.boxShadow = 'none';
+                }
+            });
+
+            // Tabs functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+
+            // FAQ functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+                    
+                    // Close all other FAQ items
+                    faqQuestions.forEach(otherQuestion => {
+                        if (otherQuestion !== this) {
+                            otherQuestion.nextElementSibling.classList.remove('active');
+                            otherQuestion.querySelector('i').style.transform = 'rotate(0deg)';
+                        }
+                    });
+                    
+                    // Toggle current FAQ item
+                    answer.classList.toggle('active');
+                    if (answer.classList.contains('active')) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+
+            // Scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            const animateElements = document.querySelectorAll('.scroll-animate');
+            animateElements.forEach(el => observer.observe(el));
+
+            // Mobile menu toggle
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+
+            mobileMenuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (navMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Close mobile menu when clicking on a link
+            const mobileNavLinks = document.querySelectorAll('.nav-link');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
